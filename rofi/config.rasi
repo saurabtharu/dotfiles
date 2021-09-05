@@ -1,0 +1,11 @@
+/** Basic config file **/
+
+configuration {
+  show-icons:         true;
+  icon-theme:         "Black-Frost-Suru";
+}
+
+configuration {
+	theme: "/usr/share/rofi/themes/sidebar1.rasi";
+	modi: "drun";
+}
