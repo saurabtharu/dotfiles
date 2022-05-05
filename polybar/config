@@ -117,25 +117,25 @@ separator-padding = 0
 
 ; font-N = <fontconfig pattern>;<vertical offset>
 
-font-0 = JetBrainsMono-Bold:style:Bold:pixelsize=8.7;2
-font-1 = Material Design Icons:size=8.7;2
-font-2 = unifont:pixelsize=8.7;2
-font-3 = JetBrainsMono Nerd Font:pixelsize=8.7;2
-font-4=CozetteVector:pixelsize=8.7;2
-font-5=FontAwesome5Free:style=Solid:pixelsize=8:antialias=8.7;2
-font-6=IPAGothic:style=Regular:size=10:antialias=8.7;2
-font-7 = JetBrainsMono Nerd Font:style=Bold:pixelsize=8.7;2
-font-8 = JetBrainsMono Nerd Font:size=8.7;2
-font-9 = Material Design Icons:style=Bold:size=8.7;2
+font-0 = JetBrainsMono-Bold:style:Bold:pixelsize=7;2
+font-1 = Material Design Icons:size=7;2
+font-2 = unifont:pixelsize=7;2
+font-3 = JetBrainsMono Nerd Font:pixelsize=7;2
+font-4=CozetteVector:pixelsize=7;2
+font-5=FontAwesome5Free:style=Solid:pixelsize=8:antialias=7;2
+font-6=IPAGothic:style=Regular:size=10:antialias=7;2
+font-7 = JetBrainsMono Nerd Font:style=Bold:pixelsize=7;2
+font-8 = JetBrainsMono Nerd Font:size=7;2
+font-9 = Material Design Icons:style=Bold:size=7;2
 font-10 = unifont:fontformat=truetype:size=13:antialias=true;
-font-11 = Font Awesome 5 Free:style=Solid:size=8.7;2
-font-12 = Font Awesome 5 Free:style=Regular:size=8.7;2
-font-13 = Font Awesome 5 Brands:style=Regular:size=8.7;2
-font-14 = Material Design Icons:style=Regular:size=8.7;2
+font-11 = Font Awesome 5 Free:style=Solid:size=7;2
+font-12 = Font Awesome 5 Free:style=Regular:size=7;2
+font-13 = Font Awesome 5 Brands:style=Regular:size=7;2
+font-14 = Material Design Icons:style=Regular:size=7;2
 font-15=Iosevka Nerd Font:size=9;2
-font-16=SF Pro Display:size=8.7;2
-font-17=font\-logos:size=8.7;2
-font-18=IPAGothic:size=11:antialias=true;2
+font-16=SF Pro Display:size=7;2
+font-17=font\-logos:size=7;2
+font-18=IPAGothic:size=7:antialias=true;2
 
 
 
@@ -155,12 +155,10 @@ scroll-up = bspwm-desknext
 scroll-down = bspwm-deskprev
 
 
-modules-left = jgmenu sep bspwm sep memory3 sep netspeed
+modules-left = bspwm sep mem sep netspeed
 modules-center = polywins
-modules-right =  wireless-network sep hybrid-date brightness pulseaudio-control battery powermenu sep
+modules-right =  wireless-network sep hybrid-date brightness  pulseaudio-control battery powermenu sep
 tray-position = right
-
-
 
 
 
@@ -269,7 +267,33 @@ click-right = pavucontrol
 
 
 
+[module/pulseaudio1]
+type = internal/pulseaudio
 
+format-volume =   <label-volume> <bar-volume>
+format-volume-foreground = ${colors.primary}
+label-volume = %percentage%%
+label-volume-foreground = ${colors.primary}
+
+label-muted =   mudo
+label-muted-foreground = ${colors.secondary}
+
+bar-volume-width = 10
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #B2535B
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 4
+bar-volume-fill = ─
+bar-volume-fill-font = 4
+bar-volume-empty = ─
+bar-volume-empty-font = 4
+bar-volume-empty-foreground = ${colors.foreground-alt}
 
 
 
@@ -547,7 +571,7 @@ label-unmounted-foreground = ${colors.foreground-alt}
 
 [module/mem]
 type = custom/script
-interval = 2
+interval = 1
 exec = free -m | sed -n 's/^Mem:\s\+[0-9]\+\s\+\([0-9]\+\)\s.\+/\1/p'
 format = <label>
 
@@ -555,9 +579,9 @@ label = %output% MB
 label-padding = 0
 
 format-prefix = "﬙ "
-format-prefix-foreground = #fc620a
+format-prefix-foreground = #3384d0
 format-prefix-background =${colors.background}
-label-foreground = #fcaf0a
+label-foreground =${colors.foreground} 
 label-background =${colors.background}
 
 
@@ -857,6 +881,24 @@ ramp-signal-0 = 
 ramp-signal-1 = 
 ramp-signal-2 = 
 
+
+
+[module/wlan1]
+type = internal/network
+interface = wlan0
+interval = 1.0
+
+format-connected = <label-connected>
+format-connected-padding = 1
+label-connected = %{A1:wifimenu:} %essid%%{A}
+label-connected-foreground = ${colors.fg}
+label-connected-padding = 1
+
+format-disconnected = <label-disconnected>
+format-disconnected-padding = 1
+label-disconnected = %{A1:wifimenu:}%{A}
+label-disconnected-foreground = ${colors.shade-1}
+label-disconnected-padding = 1
 
 
 

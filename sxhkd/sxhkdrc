@@ -5,7 +5,6 @@
 # terminal emulator
 super + Return
 	xfce4-terminal
-
 # program launcher
 # super + @space
 #	dmenu_run
@@ -122,7 +121,8 @@ super + {Left,Down,Up,Right}
 
 # open chromium 
 alt + d
-	chromium
+   epiphany 
+#	chromium
 # open firefox
  
 # open brave
@@ -134,12 +134,15 @@ super + l
 
 # start rofi launcher
 super + a
+        rofi -show drun
+super + shift + a
         rofi -show run
-
-
+super + e
+        rofi -show emoji
 # -studio-code-bin
 alt + c
 	code
+
 	
 	
 #nauutilusr
@@ -172,6 +175,13 @@ XF86AudioMute
 # brightness control
 XF86MonBrightness{Up,Down}
 	brightnessctl s 10{+,-}
+#XF86MonBrightnessUp
+#	changebrightness up
+
+#XF86MonBrightnessDown
+#	changebrightness down
+
+
 
 XF86PowerOff
 #    bspc quit
@@ -180,6 +190,8 @@ XF86PowerOff
 Print
 	gnome-screenshot
 
+super + shift + s
+        flameshot gui
 #cropped save
 
 

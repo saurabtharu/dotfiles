@@ -38,6 +38,7 @@ Plug 'xuyuanp/nerdtree-git-plugin'
 Plug 'arcticicestudio/nord-vim'
 Plug 'ghifarit53/tokyonight-vim'
 Plug 'bluz71/vim-nightfly-guicolors'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 
 call plug#end()
@@ -55,7 +56,7 @@ colorscheme tokyonight
 
 set number
 set expandtab shiftwidth=4 softtabstop=4
-:map <C-n> :NERDTree
+nmap <C-n> :NERDTreeToggle<CR>
 
 " Automatically closing braces
 inoremap {<CR> {<CR>}<Esc>ko<tab>
@@ -80,7 +81,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
+"Plugin 'tpope/vim-fugitive'
 " plugin from http://vim-scripts.org/vim/scripts.html
 " Plugin 'L9'
 " Git plugin not hosted on GitHub

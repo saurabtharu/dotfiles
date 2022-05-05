@@ -1,11 +1,82 @@
-/** Basic config file **/
-
 configuration {
-  show-icons:         true;
-  icon-theme:         "Black-Frost-Suru";
+  display-drun: "Applications : ";
+  display-window: "Windows : ";
+  display-run: "run : ";
+  display-emoji: "emoji : ";
+  display-calc: "calc : ";
+  drun-display-format: "{icon} {name}";
+  font: "JetBrainsMono Nerd Font Medium 10";
+  modi: "window,run,drun,emoji,calc";
+  show-icons: true;
+  icon-theme: "Papirus";
 }
 
-configuration {
-	theme: "/usr/share/rofi/themes/sidebar1.rasi";
-	modi: "drun";
+@theme "/dev/null"
+
+
+
+* {
+  bg: #11121D00;
+  bg-alt: #A0A8CD;
+
+  fg: #FFFFFF;
+  fg-alt: #424242;
+
+  window-border-color: #4A5057;
+  
+  background-color: @bg;
+
+ 
+  border-radius: 12;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  spacing: 0;
 }
+
+element {
+  padding: 12;
+  text-color: @fg-alt;
+}
+
+element selected {
+  text-color: #0DA1B8;
+}
+
+element-text {
+  background-color: inherit;
+  text-color: inherit;
+}
+
+entry {
+  background-color: @bg-alt;
+  padding: 12;
+  text-color: @fg;
+}
+
+inputbar {
+  children: [prompt, entry];
+}
+
+listview {
+  background-color: @bg;
+  columns: 1;
+  lines: 5;
+}
+
+mainbox {
+  background-color: @bg;
+  children: [inputbar, listview];
+}
+
+prompt {
+  background-color: @bg-alt;
+  enabled: true;
+  padding: 12 0 0 12;
+  text-color: #000000;
+}
+
+window {
+  transparency: "real";
+}
+

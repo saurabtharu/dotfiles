@@ -1,0 +1,10 @@
+/** Basic config file **/
+
+configuration {
+  show-icons:true;
+  icon-theme:"Black-Frost-Suru";
+  modi: "drun"; 
+}
+
+@theme  "sidebar1.rasi"
+

@@ -1,0 +1,1087 @@
+ROFI-THEME(5)                                                   File Formats Manual                                                   ROFI-THEME(5)
+
+NNAAMMEE
+       rrooffii--tthheemmee - Rofi theme format files
+
+DDEEFFAAUULLTT TTHHEEMMEE LLOOAADDIINNGG
+       By default, rofi loads the default theme. This theme is aallwwaayyss loaded.  In the default (always loaded) configuration it does:
+
+              @theme "default"
+
+       To unload the default theme, and load another theme, add @@tthheemmee to your ccoonnffiigg..rraassii file.
+
+       If you have a theme loaded by @@tthheemmee or use the default theme, you can tweak it by adding overriding elements at the end of your ccoonnffiigg..rraassii
+       file.
+
+       For the difference between @@iimmppoorrtt and @@tthheemmee see the MMuullttiippllee ffiillee hhaannddlliinngg section in this manpage.
+
+       To see the default theme, run the following command:
+
+              rofi -no-config -dump-theme
+
+DDEESSCCRRIIPPTTIIOONN
+       The need for a new theme format was motivated by the fact that the way rofi handled widgets has changed. From a very static drawing of lines
+       and  text  to  a  nice  structured form of packing widgets. This change made it possible to provide a more flexible theme framework. The old
+       theme format and config file are not flexible enough to expose these options in a user-friendly way. Therefore, a new file format  has  been
+       created, replacing the old one.
+
+FFOORRMMAATT SSPPEECCIIFFIICCAATTIIOONN
+EEnnccooddiinngg
+       The encoding of the file is utf-8. Both unix (\\nn) and windows (\\rr\\nn) newlines format are supported. But unix is preferred.
+
+CCoommmmeennttss
+       C and C++ file comments are supported.
+
+              • Anything after  //// and before a newline is considered a comment.
+
+              • Everything between //** and **// is a comment.
+
+       Comments can be nested and the C comments can be inline.
+
+       The following is valid:
+
+              // Magic comment.
+              property: /* comment */ value;
+
+       However, this is not:
+
+              prop/*comment*/erty: value;
+
+WWhhiittee ssppaaccee
+       White space and newlines, like comments, are ignored by the parser.
+
+       This:
+
+              property: name;
+
+       Is identical to:
+
+                   property             :
+              name
+
+              ;
+
+FFiillee eexxtteennssiioonn
+       The preferred file extension for the new theme format is rraassii. This is an abbreviation for rrofi aadvanced sstyle iinformation.
+
+BBaassiicc SSttrruuccttuurree
+       Each  element has a section with defined properties. Global properties can be defined in section ** {{ }}.  Sub-section names begin with a hash
+       symbol ##.
+
+       It is advised to define the _g_l_o_b_a_l _p_r_o_p_e_r_t_i_e_s _s_e_c_t_i_o_n on top of the file to make inheritance of properties clearer.
+
+              /* Global properties section */
+              * {
+                  // list of properties
+              }
+
+              /* Element theme section. */
+              {element path} {
+                  // list of properties
+              }
+              {elements... } {
+                  // list of properties
+              }
+
+       If there are multiple sections with the same name, they are merged. Duplicate properties are overwritten and the last parsed entry kept.
+
+GGlloobbaall pprrooppeerrttiieess sseeccttiioonn
+       A theme can have one or more global properties sections. If there is more than one, they will be merged.
+
+       The global properties section denotes the defaults for each element.  Each property of this section can  be  referenced  with  @@{{iiddeennttiiffiieerr}}
+       (See Properties section)
+
+       A global properties section is indicated with a ** as element path.
+
+EElleemmeenntt tthheemmee sseeccttiioonn
+       A theme can have multiple element theme sections.
+
+       The element path can consist of multiple names separated by whitespace or dots.  Each element may contain any number of letters, numbers and
+       --'s.  The first element in the element path should always start with a ##.  Multiple elements can be specified by a ,,.
+
+       This is a valid element name:
+
+              element normal.normal {
+                  background-color: blue;
+              }
+              button {
+                  background-color: blue;
+              }
+
+       And is identical to:
+
+              element normal normal, button {
+                  background-color: blue;
+              }
+
+       Each section inherits the global properties. Properties can be explicitly inherited from their parent with the iinnhheerriitt keyword.  In the fol‐
+       lowing example:
+
+              window {
+               a: 1;
+               b: 2;
+               children: [ mainbox ];
+              }
+              mainbox {
+                  a: inherit;
+                  b: 4;
+                  c: 8;
+              }
+
+       The element mmaaiinnbbooxx will have the following set of properties (if mmaaiinnbbooxx is a child of wwiinnddooww):
+
+              a: 1;
+              b: 4;
+              c: 8;
+
+       If multiple sections are defined with the same name, they are merged by the parser. If multiple properties with the same name are defined in
+       one section, the last encountered property is used.
+
+PPrrooppeerrttiieess FFoorrmmaatt
+       The properties in a section consist of:
+
+              {identifier}: {value};
+
+       Both fields are mandatory for a property.
+
+       The iiddeennttiiffiieerr names the specified property. Identifiers can consist of any combination of numbers, letters and '-'. It must not contain any
+       whitespace.   The structure of the vvaalluuee defines the type of the property. The current parser does not define or enforce a certain type of a
+       particular iiddeennttiiffiieerr.  When used, values with the wrong type that cannot be converted are ignored.
+
+       The current theme format supports different types:
+
+              • a string
+
+              • an integer number
+
+              • a fractional number
+
+              • a boolean value
+
+              • a color
+
+              • image
+
+              • text style
+
+              • line style
+
+              • a distance
+
+              • a padding
+
+              • a border
+
+              • a position
+
+              • a reference
+
+              • an orientation
+
+              • a cursor
+
+              • a list of keywords
+
+              • an environment variable
+
+              • Inherit
+
+       Some of these types are a combination of other types.
+
+SSttrriinngg
+              • Format:  ""[[::pprriinntt::]]++""
+
+       A string is always surrounded by double quotes (""). Between the quotes there can be any printable character.
+
+       For example:
+
+              font: "Awasome 12";
+
+       The string must be valid UTF-8.
+
+IInntteeggeerr
+              • Format: [[--++]]??[[::ddiiggiitt::]]++
+
+       An integer may contain any number.
+
+       For examples:
+
+              lines: 12;
+
+RReeaall
+              • Format: [[--++]]??[[::ddiiggiitt::]]++((\\..[[::ddiiggiitt::]]++))??
+
+       A real is an integer with an optional fraction.
+
+       For example:
+
+              real: 3.4;
+
+       The following is not valid: ..33, 33.. or scientific notation: 33..44ee--33.
+
+BBoooolleeaann
+              • Format: ((ttrruuee||ffaallssee))
+
+       Boolean value is either ttrruuee or ffaallssee. This is case-sensitive.
+
+       For example:
+
+              dynamic: false;
+
+IImmaaggee
+       rrooffii support a limited set of background-image formats.
+
+              • Format: url("path to image");
+
+              • Format: url("path to image", scale); where scale is: none, both, width, height
+
+              • Format: linear-gradient(stop color,stop1, color, stop2 color, ...);
+
+              • Format: linear-gradient(to direction, stop color,stop1, color, stop2 color, ...); where direction is:   top,left,right,bottom.
+
+              • Format: linear-gradient(angle, stop color,stop1, color, stop2 color, ...); Angle in deg,rad,grad (as used in color).
+
+       Where the ppaatthh is a string, and ssttoopp color is of type color.
+
+CCoolloorr
+       rrooffii supports the color formats as specified in the CSS standard (1,2,3 and some of CSS 4)
+
+              • Format: ##{{HHEEXX}}{{33}} (rgb)
+
+              • Format: ##{{HHEEXX}}{{44}} (rgba)
+
+              • Format: ##{{HHEEXX}}{{66}} (rrggbb)
+
+              • Format: ##{{HHEEXX}}{{88}} (rrggbbaa)
+
+              • Format: rrggbb[[aa]](({{IINNTTEEGGEERR}},,{{IINNTTEEGGEERR}},,{{IINNTTEEGGEERR}}[[,, {{PPEERRCCEENNTTAAGGEE}}]]))
+
+              • Format: rrggbb[[aa]](({{IINNTTEEGGEERR}}%%,,{{IINNTTEEGGEERR}}%%,,{{IINNTTEEGGEERR}}%%[[,, {{PPEERRCCEENNTTAAGGEE}}]]))
+
+              • Format: hhssll[[aa]](( {{AANNGGLLEE}},, {{PPEERRCCEENNTTAAGGEE}},, {{PPEERRCCEENNTTAAGGEE}} [[,, {{PPEERRCCEENNTTAAGGEE}}]]))
+
+              • Format: hhwwbb[[aa]](( {{AANNGGLLEE}},, {{PPEERRCCEENNTTAAGGEE}},, {{PPEERRCCEENNTTAAGGEE}} [[,, {{PPEERRCCEENNTTAAGGEE}}]]))
+
+              • Format: ccmmyykk(( {{PPEERRCCEENNTTAAGGEE}},, {{PPEERRCCEENNTTAAGGEE}},, {{PPEERRCCEENNTTAAGGEE}},, {{PPEERRCCEENNTTAAGGEE}} [[,, {{PPEERRCCEENNTTAAGGEE}} ]]))
+
+              • Format: {{nnaammeedd--ccoolloorr}} [[ // {{PPEERRCCEENNTTAAGGEE}} ]]
+
+       The white-space format proposed in CSS4 is also supported.
+
+       The different values are:
+
+              • {{HHEEXX}} is a hexadecimal number ('0-9a-f' case insensitive).
+
+              • {{IINNTTEEGGEERR}} value can be between 0 and 255 or 0-100 when representing percentage.
+
+              • {{AANNGGLLEE}} is the angle on the color wheel, can be in ddeegg, rraadd, ggrraadd or ttuurrnn. When no unit is specified, degrees is assumed.
+
+              • {{PPEERRCCEENNTTAAGGEE}} can be between 0-1.0, or 0%-100%
+
+              • {{nnaammeedd--ccoolloorr}} is one of the following colors:AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige,  Bisque,  Black,  BlanchedAl‐
+                mond,  Blue,  BlueViolet, Brown, BurlyWood, CadetBlue, Chartreuse, Chocolate, Coral, CornflowerBlue, Cornsilk, Crimson, Cyan, Dark‐
+                Blue, DarkCyan, DarkGoldenRod, DarkGray, DarkGrey, DarkGreen, DarkKhaki, DarkMagenta, DarkOliveGreen, DarkOrange, DarkOrchid, Dark‐
+                Red,  DarkSalmon,  DarkSeaGreen,  DarkSlateBlue,  DarkSlateGray,  DarkSlateGrey,  DarkTurquoise, DarkViolet, DeepPink, DeepSkyBlue,
+                DimGray, DimGrey, DodgerBlue, FireBrick, FloralWhite, ForestGreen, Fuchsia, Gainsboro, GhostWhite,  Gold,  GoldenRod,  Gray,  Grey,
+                Green,  GreenYellow,  HoneyDew,  HotPink, IndianRed, Indigo, Ivory, Khaki, Lavender, LavenderBlush, LawnGreen, LemonChiffon, Light‐
+                Blue, LightCoral, LightCyan, LightGoldenRodYellow, LightGray, LightGrey, LightGreen, LightPink, LightSalmon, LightSeaGreen,  Light‐
+                SkyBlue,  LightSlateGray,  LightSlateGrey,  LightSteelBlue, LightYellow, Lime, LimeGreen, Linen, Magenta, Maroon, MediumAquaMarine,
+                MediumBlue, MediumOrchid, MediumPurple, MediumSeaGreen, MediumSlateBlue, MediumSpringGreen, MediumTurquoise, MediumVioletRed,  Mid‐
+                nightBlue,  MintCream, MistyRose, Moccasin, NavajoWhite, Navy, OldLace, Olive, OliveDrab, Orange, OrangeRed, Orchid, PaleGoldenRod,
+                PaleGreen, PaleTurquoise, PaleVioletRed, PapayaWhip, PeachPuff, Peru, Pink, Plum, PowderBlue,  Purple,  RebeccaPurple,  Red,  Rosy‐
+                Brown,  RoyalBlue,  SaddleBrown,  Salmon, SandyBrown, SeaGreen, SeaShell, Sienna, Silver, SkyBlue, SlateBlue, SlateGray, SlateGrey,
+                Snow, SpringGreen, SteelBlue, Tan, Teal, Thistle, Tomato, Turquoise, Violet, Wheat, White, WhiteSmoke,  Yellow,  YellowGreen,trans‐
+                parent
+
+       For example:
+
+              background-color: #FF0000;
+              border-color: rgba(0,0,1, 0.5);
+              text-color: SeaGreen;
+
+       or
+
+              background-color: transparent;
+              text-color: Black;
+
+TTeexxtt ssttyyllee
+              • Format: ((bboolldd||iittaalliicc||uunnddeerrlliinnee||ssttrriikkeetthhrroouugghh||nnoonnee))
+
+       Text style indicates how the highlighted text is emphasized. NNoonnee indicates that no emphasis should be applied.
+
+              • bboolldd: make the text thicker then the surrounding text.
+
+              • iittaalliicc: put the highlighted text in script type (slanted).
+
+              • uunnddeerrlliinnee: put a line under the highlighted text.
+
+              • ssttrriikkeetthhrroouugghh: put a line through the highlighted text.
+
+LLiinnee ssttyyllee
+              • Format: ((ddaasshh||ssoolliidd))
+
+       Indicates how a line should be drawn.  It currently supports:
+        * ddaasshh:  a dashed line, where the gap is the same width as the dash
+        * ssoolliidd: a solid line
+
+DDiissttaannccee
+              • Format: {{IInntteeggeerr}}ppxx
+
+              • Format: {{RReeaall}}eemm
+
+              • Format: {{RReeaall}}cchh
+
+              • Format: {{RReeaall}}%%
+
+              • Format: {{IInntteeggeerr}}mmmm
+
+       A distance can be specified in 3 different units:
+
+              • ppxx: Screen pixels.
+
+              • eemm: Relative to text height.
+
+              • cchh: Relative to width of a single number.
+
+              • mmmm: Actual size in millimeters (based on dpi).
+
+              • %%:  Percentage of the mmoonniittoorr size.
+
+       Distances used in the horizontal direction use the monitor width. Distances in the vertical direction use the monitor height.  For example:
+
+                 padding: 10%;
+
+       On a full-HD (1920x1080) monitor, it defines a padding of 192 pixels on the left and right side and 108 pixels on the top and bottom.
+
+   CCaallccuullaattiinngg ssiizzeess
+       Rofi supports some maths in calculating sizes. For this it uses the CSS syntax:
+
+              width: calc( 100% - 37px );
+
+       It supports the following operations:
+
+              • ++   : Add
+
+              • --   : Subtract
+
+              • //   : Divide
+
+              • **   : Multiply
+
+              • %%   : Multiply
+
+              • mmiinn : Minimum of l or rvalue;
+
+              • mmaaxx : Maximum of l or rvalue;
+
+       It uses the C precedence ordering.
+
+PPaaddddiinngg
+              • Format: {{IInntteeggeerr}}
+
+              • Format: {{DDiissttaannccee}}
+
+              • Format: {{DDiissttaannccee}} {{DDiissttaannccee}}
+
+              • Format: {{DDiissttaannccee}} {{DDiissttaannccee}} {{DDiissttaannccee}}
+
+              • Format: {{DDiissttaannccee}} {{DDiissttaannccee}} {{DDiissttaannccee}} {{DDiissttaannccee}}
+
+       If no unit is specified, pixels are assumed.
+
+       The different number of fields in the formats are parsed like:
+
+              • 1 field: aallll
+
+              • 2 fields: ttooppbboottttoomm lleeffttrriigghhtt
+
+              • 3 fields: ttoopp, lleeffttrriigghhtt, bboottttoomm
+
+              • 4 fields: ttoopp, rriigghhtt, bboottttoomm, lleefftt
+
+BBoorrddeerr
+              • Format: {{IInntteeggeerr}}
+
+              • Format: {{DDiissttaannccee}}
+
+              • Format: {{DDiissttaannccee}} {{DDiissttaannccee}}
+
+              • Format: {{DDiissttaannccee}} {{DDiissttaannccee}} {{DDiissttaannccee}}
+
+              • Format: {{DDiissttaannccee}} {{DDiissttaannccee}} {{DDiissttaannccee}} {{DDiissttaannccee}}
+
+              • Format: {{DDiissttaannccee}} {{LLiinnee ssttyyllee}}
+
+              • Format: {{DDiissttaannccee}} {{LLiinnee ssttyyllee}} {{DDiissttaannccee}} {{LLiinnee ssttyyllee}}
+
+              • Format: {{DDiissttaannccee}} {{LLiinnee ssttyyllee}} {{DDiissttaannccee}} {{LLiinnee ssttyyllee}} {{DDiissttaannccee}} {{LLiinnee ssttyyllee}}
+
+              • Format: {{DDiissttaannccee}} {{LLiinnee ssttyyllee}} {{DDiissttaannccee}} {{LLiinnee ssttyyllee}} {{DDiissttaannccee}} {{LLiinnee ssttyyllee}} {{DDiissttaannccee}} {{LLiinnee ssttyyllee}}
+
+       Borders are identical to padding, except that each distance field has a line style property.
+
+              When no unit is specified, pixels are assumed.
+
+PPoossiittiioonn
+       Indicate a place on the window/monitor.
+
+              • Format:  ((cceenntteerr||eeaasstt||nnoorrtthh||wweesstt||ssoouutthh||nnoorrtthh  eeaasstt||nnoorrtthh  wweesstt||ssoouutthh  wweesstt||ssoouutthh  eeaasstt))  nnoorrtthh  wweesstt    ||    nnoorrtthh    ||  nnoorrtthh eeaasstt
+                --------------------------||--------------------------||------------------------
+                  wweesstt   ||   cceenntteerr    ||  eeaasstt --------------------------||--------------------------||------------------------ ssoouutthh wweesstt   ||    ssoouutthh    ||  ssoouutthh eeaasstt
+
+VViissiibbiilliittyy
+       It is possible to hide widgets:
+
+       inputbar {
+           enabled: false; }
+
+RReeffeerreennccee
+              • Format: @@{{PPRROOPPEERRTTYY NNAAMMEE}}
+
+       A reference can point to another reference. Currently, the maximum number of redirects is 20.  A property always refers to another property.
+       It cannot be used for a subpart of the property.  For example, this is not valid:
+
+              highlight: bold @pink;
+
+       But this is:
+
+              * {
+                  myhigh: bold #FAA;
+              }
+
+              window {
+                  highlight: @myhigh;
+              }
+
+              • Format: vvaarr((PPRROOPPEERRTTYY NNAAMMEE,, DDEEFFAAUULLTT))
+
+       A reference can point to another reference. Currently, the maximum number of redirects is 20.  A property always refers to another property.
+       It cannot be used for a subpart of the property.
+
+       Example:
+
+              window {
+                  width: var( width, 30%);
+              }
+
+       If the property wwiiddtthh is set globally (**{{}}) that value is used, if the property wwiiddtthh is not set, the default value is used.
+
+OOrriieennttaattiioonn
+              • Format: ((hhoorriizzoonnttaall||vveerrttiiccaall))
+
+       Specify the orientation of the widget.
+
+CCuurrssoorr
+              • Format: ((ddeeffaauulltt||ppooiinntteerr||tteexxtt))
+
+       Specify the type of mouse cursor that is set when the mouse pointer is over the widget.
+
+LLiisstt ooff kkeeyywwoorrddss
+              • Format: [[ kkeeyywwoorrdd,, kkeeyywwoorrdd ]]
+
+       A list starts with a '[' and ends with a ']'. The entries in the list are comma-separated.  The kkeeyywwoorrdd in the  list  refers  to  an  widget
+       name.
+
+EEnnvviirroonnmmeenntt vvaarriiaabbllee
+              • Format: $${{::aallnnuumm::}}
+
+       This  will parse the environment variable as the property value. (that then can be any of the above types).  The environment variable should
+       be an alphanumeric string without white-space.
+
+              * {
+                  background-color: ${BG};
+              }
+
+              • Format: eennvv((EENNVVIIRROONNMMEENNTT,, ddeeffaauulltt))
+
+       This will parse the environment variable as the property value. (that then can be any of the above types).  The environment variable  should
+       be an alphanumeric string without white-space.  If the environment value is not found, the default value is used.
+
+              window {
+                  width: env(WIDTH, 40%);
+              }
+
+       If environment WIDTH is set, then that value is parsed, otherwise the default value (4400%%).
+
+IInnhheerriitt
+              • Format: iinnhheerriitt
+
+       Inherits the property from its parent widget.
+
+              mainbox {
+                  border-color: inherit;
+              }
+
+EELLEEMMEENNTTSS PPAATTHHSS
+       Element paths exists of two parts, the first part refers to the actual widget by name.  Some widgets have an extra state.
+
+       For example:
+
+              element selected {
+              }
+
+       Here eelleemmeenntt sseelleecctteedd is the name of the widget, sseelleecctteedd is the state of the widget.
+
+       The difference between dots and spaces is purely cosmetic. These are all the same:
+
+              element .selected {
+
+              element.selected {
+              }
+              element selected {
+              }
+
+SSUUPPPPOORRTTEEDD EELLEEMMEENNTT PPAATTHH
+NNaammee
+       The current widgets available in rrooffii:
+
+              • wwiinnddooww
+
+                • oovveerrllaayy: the overlay widget.
+
+                • mmaaiinnbbooxx: The mainbox box.
+
+                • iinnppuuttbbaarr: The input bar box.
+
+                  • bbooxx: the horizontal @box packing the widgets
+
+                  • ccaassee--iinnddiiccaattoorr: the case/sort indicator @textbox
+
+                  • pprroommpptt: the prompt @textbox
+
+                  • eennttrryy: the main entry @textbox
+
+                  • nnuumm--rroowwss: Shows the total number of rows.
+
+                  • nnuumm--ffiilltteerreedd--rroowwss: Shows the total number of rows after filtering.
+
+                • lliissttvviieeww: The listview.
+
+                  • ssccrroollllbbaarr: the listview scrollbar
+
+                  • eelleemmeenntt: a box in the listview holding the entries
+
+                    • eelleemmeenntt--iiccoonn: the widget in the listview's entry showing the (optional) icon
+
+                    • eelleemmeenntt--iinnddeexx: the widget in the listview's entry keybindable index (1,2,3..0)
+
+                    • eelleemmeenntt--tteexxtt: the widget in the listview's entry showing the text.
+
+                • mmooddee--sswwiittcchheerr: the main horizontal @box packing the buttons.
+
+                  • bbuuttttoonn: the buttons @textbox for each mode
+
+                • mmeessssaaggee: The container holding the textbox.
+
+                  • tteexxttbbooxx: the message textbox
+
+       Note that these path names match the default theme. Themes that provide a custom layout will have different elements, and structure.
+
+SSttaattee
+       State: State of widget
+
+       Optional flag(s) indicating state of the widget, used for theming.
+
+       These are appended after the name or class of the widget.
+
+   EExxaammppllee::
+       bbuuttttoonn sseelleecctteedd..nnoorrmmaall {{ }}
+
+       eelleemmeenntt sseelleecctteedd..uurrggeenntt {{ }}
+
+       Currently only the entrybox and scrollbar have states:
+
+   EEnnttrryybbooxx::
+       {{vviissiibbllee mmooddiiffiieerr}}..{{ssttaattee}}
+
+       Where vviissiibbllee mmooddiiffiieerr can be:
+        * normal: no modification
+        * selected: the entry is selected/highlighted by user
+        * alternate: the entry is at an alternating row (uneven row)
+
+       Where ssttaattee is:
+        * normal: no modification
+        * urgent: this entry is marked urgent
+        * active: this entry is marked active
+
+       These can be mixed.
+
+       Example:
+
+              nametotextbox selected.active {
+                  background-color: #003642;
+                  text-color: #008ed4;
+              }
+
+       Sets  all  selected  textboxes  marked  active  to the given text and background color.  Note that a state modifies the original element, it
+       therefore contains all the properties of that element.
+
+   SSccrroollllbbaarr
+       The scrollbar uses the hhaannddllee state when drawing the small scrollbar handle.  This allows the colors used for drawing the handle to  be  set
+       independently.
+
+SSUUPPPPOORRTTEEDD PPRROOPPEERRTTIIEESS
+       The following properties are currently supported:
+
+   aallll wwiiddggeettss::
+              • eennaabblleedd:         enable/disable the widget
+
+              • ppaaddddiinngg:         padding Padding on the inside of the widget
+
+              • mmaarrggiinn:          padding Margin on the outside of the widget
+
+              • bboorrddeerr:          border Border around the widget (between padding and margin)/
+
+              • bboorrddeerr--rraaddiiuuss:    padding Sets a radius on the corners of the borders.
+
+              • bbaacckkggrroouunndd--ccoolloorr:      color Background color
+
+              • bbaacckkggrroouunndd--iimmaaggee:      image Background image
+
+              • bboorrddeerr--ccoolloorr:      color Color of the border
+
+              • ccuurrssoorr:      cursor Type of mouse cursor that is set when the mouse pointer is hovered over the widget.
+
+   wwiinnddooww::
+              • ffoonntt:            string The font used in the window
+
+              • ttrraannssppaarreennccyy:     string  Indicating if transparency should be used and what type: rreeaall - True transparency. Only works with a com‐
+                positor.  bbaacckkggrroouunndd - Take a screenshot of the background image and use that.  ssccrreeeennsshhoott - Take a screenshot of  the  screen  and
+                use that.  PPaatthh to png file - Use an image.
+
+              • llooccaattiioonn:       position The place of the anchor on the monitor
+
+              • aanncchhoorr:         anchor The anchor position on the window
+
+              • ffuullllssccrreeeenn:     boolean Window is fullscreen.
+
+              • wwiiddtthh:          distance The width of the window
+
+              • xx--ooffffsseett:  distance
+
+              • yy--ooffffsseett:  distance The offset of the window to the anchor point, allowing you to push the window left/right/up/down
+
+   ssccrroollllbbaarr::
+              • bbaacckkggrroouunndd--ccoolloorr:    color
+
+              • hhaannddllee--wwiiddtthh:        distance
+
+              • hhaannddllee--ccoolloorr:        color
+
+              • bboorrddeerr--ccoolloorr:        color
+
+   bbooxx::
+              • oorriieennttaattiioonn:      orientation
+                    Set the direction the elements are packed.
+
+              • ssppaacciinngg:         distance
+                    Distance between the packed elements.
+
+   tteexxttbbooxx::
+              • bbaacckkggrroouunndd--ccoolloorr:  color
+
+              • bboorrddeerr--ccoolloorr:      the color used for the border around the widget.
+
+              • ffoonntt:              the font used by this textbox (string).
+
+              • ssttrr:               the string to display by this textbox (string).
+
+              • vveerrttiiccaall--aalliiggnn:    Vertical alignment of the text. A number between 0 (top) and 1 (bottom).
+
+              • hhoorriizzoonnttaall--aalliiggnn:  Horizontal alignment of the text. A number between 0 (left) and 1 (right).
+
+              • tteexxtt--ccoolloorr:        the text color to use.
+
+              • hhiigghhlliigghhtt:          text  style  {color}.   color  is  optional, multiple highlight styles can be added like: bold underline italic
+                #000000; This option is only available on the eelleemmeenntt--tteexxtt widget.
+
+              • wwiiddtthh:             override the desired width for the textbox.
+
+              • ccoonntteenntt:           Set the displayed text (String).
+
+              • ppllaacceehhoollddeerr:       Set the displayed text (String) when nothing is entered.
+
+              • ppllaacceehhoollddeerr--ccoolloorr: Color of the placeholder text.
+
+              • bblliinnkk:             Enable/Disable blinking on an input textbox (Boolean).
+
+              • mmaarrkkuupp:            Force markup on, beware that only valid pango markup strings are shown.
+
+   lliissttvviieeww::
+              • ccoolluummnnss:         integer Number of columns to show (at least 1)
+
+              • ffiixxeedd--hheeiigghhtt:    boolean Always show lliinneess rows, even if fewer elements are available.
+
+              • ddyynnaammiicc:         boolean TTrruuee if the size should change when filtering the list, FFaallssee if it should keep the original height.
+
+              • ssccrroollllbbaarr:       boolean If the scrollbar should be enabled/disabled.
+
+              • ssccrroollllbbaarr--wwiiddtthh: distance Width of the scrollbar
+
+              • ccyyccllee:           boolean When navigating, it should wrap around
+
+              • ssppaacciinngg:         distance Spacing between the elements (both vertical and horizontal)
+
+              • lliinneess:           integer Number of rows to show in the list view.
+
+              • llaayyoouutt:           orientation Indicate how elements are stacked. Horizontal implements the dmenu style.
+
+              • rreevveerrssee:         boolean Reverse the ordering (top down to bottom up).
+
+              • ffiixxeedd--ccoolluummnnss:    boolean Do not reduce the number of columns shown when number of visible elements is not enough to fill them all.
+
+       Each element is a bbooxx called eelleemmeenntt. Each eelleemmeenntt can contain an eelleemmeenntt--iiccoonn and eelleemmeenntt--tteexxtt.
+
+   lliissttvviieeww tteexxtt hhiigghhlliigghhtt::
+       The eelleemmeenntt--tteexxtt widget in the lliissttvviieeww is the one used to show the text.  On this widget set the hhiigghhlliigghhtt property (only place this  prop‐
+       erty is used) to change the style of highlighting.  The hhiigghhlliigghhtt property consist of the tteexxtt--ssttyyllee property and a color.
+
+       To disable highlighting:
+
+                element-text {
+                  highlight: None;
+                }
+
+       To set to red underlined:
+
+                element-text {
+                  highlight: underline red;
+                }
+
+LLaayyoouutt
+       The  new  format  allows  the layout of the rrooffii window to be tweaked extensively.  For each widget, the themer can specify padding, margin,
+       border, font, and more.  It even allows, as an advanced feature, to pack widgets in a custom structure.
+
+   BBaassiicc ssttrruuccttuurree
+       The whole view is made out of boxes that pack other boxes or widgets.  The box can be vertical or horizontal. This is  loosely  inspired  by
+       GTK ⟨http://gtk.org/⟩.
+
+       The current layout of rrooffii is structured as follows:
+
+              |------------------------------------------------------------------------------------|
+              | window {BOX:vertical}                                                              |
+              | |-------------------------------------------------------------------------------|  |
+              | | mainbox  {BOX:vertical}                                                       |  |
+              | | |---------------------------------------------------------------------------| |  |
+              | | | inputbar {BOX:horizontal}                                                 | |  |
+              | | | |---------| |-| |---------------------------------|---| |---| |---| |---| | |  |
+              | | | | prompt  | |:| | entry                           |#fr| | / | |#ns| |ci | | |  |
+              | | | |---------| |_| |---------------------------------|---| |---| |---| |---| | |  |
+              | | |---------------------------------------------------------------------------| |  |
+              | |                                                                               |  |
+              | | |---------------------------------------------------------------------------| |  |
+              | | | message                                                                   | |  |
+              | | | |-----------------------------------------------------------------------| | |  |
+              | | | | textbox                                                               | | |  |
+              | | | |-----------------------------------------------------------------------| | |  |
+              | | |---------------------------------------------------------------------------| |  |
+              | |                                                                               |  |
+              | | |-----------------------------------------------------------------------------|  |
+              | | | listview                                                                    |  |
+              | | | |------------------------------------------------------------------------]  |  |
+              | | | | element                                                                |  |  |
+              | | | | |-----------------| |------------------------------------------------] |  |  |
+              | | | | |element-icon     | |element-text                                    | |  |  |
+              | | | | |-----------------| |------------------------------------------------| |  |  |
+              | | | |------------------------------------------------------------------------]  |  |
+              | | |-----------------------------------------------------------------------------|  |
+              | |                                                                               |  |
+              | | |---------------------------------------------------------------------------| |  |
+              | | |  mode-switcher {BOX:horizontal}                                           | |  |
+              | | | |---------------|   |---------------|  |--------------| |---------------| | |  |
+              | | | | Button        |   | Button        |  | Button       | | Button        | | |  |
+              | | | |---------------|   |---------------|  |--------------| |---------------| | |  |
+              | | |---------------------------------------------------------------------------| |  |
+              | |-------------------------------------------------------------------------------|  |
+              |------------------------------------------------------------------------------------|
+
+                     • ci is the case-indicator
+
+                     • fr is the num-filtered-rows
+
+                     • ns is the num-rows
+
+   EErrrroorr mmeessssaaggee ssttrruuccttuurree
+              |-----------------------------------------------------------------------------------|
+              | window {BOX:vertical}                                                             |
+              | |------------------------------------------------------------------------------|  |
+              | | error-message {BOX:vertical}                                                 |  |
+              | | |-------------------------------------------------------------------------|  |  |
+              | | | textbox                                                                 |  |  |
+              | | |-------------------------------------------------------------------------|  |  |
+              | |------------------------------------------------------------------------------|  |
+              |-----------------------------------------------------------------------------------|
+
+   AAddvvaanncceedd llaayyoouutt
+       The layout of rrooffii can be tweaked by packing the 'fixed' widgets in a custom structure.
+
+       The following widgets are fixed, as they provide core rrooffii functionality:
+
+              • prompt
+
+              • entry
+
+              • overlay
+
+              • case-indicator
+
+              • message
+
+              • listview
+
+              • mode-switcher
+
+              • num-rows
+
+              • num-filtered-rows
+
+       The  following  keywords  are defined and can be used to automatically pack a subset of the widgets.  These are used in the default theme as
+       depicted in the figure above.
+
+              • mainbox Packs: iinnppuuttbbaarr,, mmeessssaaggee,, lliissttvviieeww,, mmooddee--sswwiittcchheerr
+
+              • inputbar Packs: pprroommpptt,,eennttrryy,,ccaassee--iinnddiiccaattoorr
+
+       Any widget name starting with tteexxttbbooxx is a textbox widget, others are box widgets and can pack other widgets.
+
+       There are several special widgets that can be used by prefixing the name of the widget:
+
+   tteexxttbbooxx
+       This is a read-only textbox widget. The displayed string can be set with ccoonntteenntt.
+
+       Example:
+
+              textbox-custom {
+                expand: false;
+                content: "My Message";
+              }
+
+   IIccoonn
+       This is an icon widget. The displayed icon can be set with ffiilleennaammee and size with ssiizzee.  If the property aaccttiioonn is set, it acts as a button.
+       aaccttiioonn can be set to a keybinding name and completes that action. (see rofi -show keys for a list).
+
+       If the ssqquuaarreedd property is set to ffaallssee the widget height and width are not forced to be equal.
+
+       Example:
+
+              icon-paste {
+                  expand: false;
+                  filename: "gtk-paste";
+                  size: 24;
+                  vertical-align: 0.5;
+                  action: "kb-primary-paste";
+              }
+
+   bbuuttttoonn
+       This  is a textbox widget that can have a 'clickable' action.  The aaccttiioonn can be set to: kkeeyybbiinnddiinngg: accepts a keybinding name and completes
+       that action. (see rofi -show keys for a list).
+
+              button-paste {
+                  expand: false;
+                  content: "My Clickable Message";
+                  vertical-align: 0.5;
+                  action: "kb-primary-paste";
+              }
+
+   CChhiillddrreenn
+       To specify children, set the cchhiillddrreenn property (this always happens on the bbooxx child, see example below):
+
+              inputbar {
+                children: [prompt,entry,overlay,case-indicator];
+              }
+
+       The theme needs to be updated to match the hierarchy specified.
+
+       Below is an example of a theme emulating dmenu:
+
+              * {
+                  background-color:      Black;
+                  text-color:            White;
+                  border-color:          White;
+                  font:            "Times New Roman 12";
+              }
+
+              window {
+                  anchor:     north;
+                  location:   north;
+                  width:      100%;
+                  padding:    4px;
+                  children:   [ horibox ];
+              }
+
+              horibox {
+                  orientation: horizontal;
+                  children:   [ prompt, entry, listview ];
+              }
+
+              listview {
+                  layout:     horizontal;
+                  spacing:    5px;
+                  lines:      10;
+              }
+
+              entry {
+                  expand:     false;
+                  width:      10em;
+              }
+
+              element {
+                  padding: 0px 2px;
+              }
+              element selected {
+                  background-color: SteelBlue;
+              }
+
+   PPaaddddiinngg aanndd mmaarrggiinn
+       Just like CSS, rrooffii uses the box model for each widget.
+
+              |-------------------------------------------------------------------|
+              | margin                                                            |
+              |  |-------------------------------------------------------------|  |
+              |  | border                                                      |  |
+              |  | |---------------------------------------------------------| |  |
+              |  | | padding                                                 | |  |
+              |  | | |-----------------------------------------------------| | |  |
+              |  | | | content                                             | | |  |
+              |  | | |-----------------------------------------------------| | |  |
+              |  | |---------------------------------------------------------| |  |
+              |  |-------------------------------------------------------------|  |
+              |-------------------------------------------------------------------|
+
+       Explanation of the different parts:
+
+              • Content - The content of the widget.
+
+              • Padding - Clears an area around the widget.  The padding shows the background color of the widget.
+
+              • Border - A border that goes around the padding and content.  The border use the border-color of the widget.
+
+              • Margin - Clears an area outside the border.  The margin is transparent.
+
+       The box model allows us to add a border around elements, and to define space between elements.
+
+       The size of each margin, border, and padding can be set.  For the border, a linestyle and radius can be set.
+
+   SSppaacciinngg
+       Widgets that can pack more then one child widget (currently box and listview) have the ssppaacciinngg property.  This property  sets  the  distance
+       between the packed widgets (both horizontally and vertically).
+
+              |---------------------------------------|
+              |  |--------| s |--------| s |-------|  |
+              |  | child  | p | child  | p | child |  |
+              |  |        | a |        | a |       |  |
+              |  |        | c |        | c |       |  |
+              |  |        | i |        | i |       |  |
+              |  |        | n |        | n |       |  |
+              |  |--------| g |--------| g |-------|  |
+              |---------------------------------------|
+
+   AAddvvaanncceedd bbooxx ppaacckkiinngg
+       More dynamic spacing can be achieved by adding dummy widgets, for example to make one widget centered:
+
+              |--------------------------------------------|
+              |  |-----------|  |--------|  |-----------|  |
+              |  | dummy     |  | child  |  | dummy     |  |
+              |  | expand: y |  |        |  | expand: y |  |
+              |  |           |  |        |  |           |  |
+              |  |           |  |        |  |           |  |
+              |  |           |  |        |  |           |  |
+              |  |-----------|  |--------|  |-----------|  |
+              |--------------------------------------------|
+
+       If  both  dummy widgets are set to expand, cchhiilldd will be centered. Depending on the eexxppaanndd flag of child the remaining space will be equally
+       divided between both dummy and child widget (expand enabled), or both dummy widgets (expand disabled).
+
+DDEEBBUUGGGGIINNGG
+       To get debug information from the parser, run rofi like:
+
+              G_MESSAGES_DEBUG=Parser rofi -show run
+
+       Syntax errors are shown in a popup and printed out to command line with the above command.
+
+       To see the elements queried during running, run:
+
+              G_MESSAGES_DEBUG=Theme rofi -show run
+
+       To test minor changes, part of the theme can be passed on the command line, for example to set it to full-screen:
+
+              rofi -theme-str 'window { fullscreen:true;}' -show run
+
+       To print the current theme, run:
+
+              rofi -dump-theme
+
+MMeeddiiaa ssuuppppoorrtt
+       Parts of the theme can be conditionally loaded, like the CSS @@mmeeddiiaa option.
+
+              @media ( min-width: 120 ) {
+
+              }
+
+       It supports the following keys as constraint:
+
+              • mmiinn--wwiiddtthh:         load when width is bigger or equal then value.
+
+              • mmaaxx--wwiiddtthh:         load when width is smaller then value.
+
+              • mmiinn--hheeiigghhtt:        load when height is bigger or equal then value.
+
+              • mmaaxx--hheeiigghhtt:        load when height is smaller then value.
+
+              • mmiinn--aassppeecctt--rraattiioo   load when aspect ratio is over value.
+
+              • mmaaxx--aassppeecctt--rraattiioo:  load when aspect ratio is under value.
+
+              • mmoonniittoorr--iidd:        The monitor id, see rofi -help for id's.
+
+       @media takes an integer number or a fraction, for integer number ppxx can be added.
+
+              @media ( min-width: 120 px ) {
+
+              }
+
+FFoonntt PPaarrssiinngg
+       Rofi uses pango ⟨https://pango.gnome.org/⟩ for font rendering. The font should be specified in a format that pango understands.   This  nor‐
+       mally is the font name followed by the font size. For example:
+
+              mono 18
+
+       Or
+
+              FontAwesome 22
+
+MMuullttiippllee ffiillee hhaannddlliinngg
+       The  rasi  file format offers two methods of including other files.  This can be used to modify existing themes, or have multiple variations
+       on a theme.
+
+              • import:  Import and parse a second file.
+
+              • theme:   Discard theme, and load file as a fresh theme.
+
+       Syntax:
+
+              @import "myfile"
+              @theme "mytheme"
+
+       The specified file can either by _n_a_m_e, _f_i_l_e_n_a_m_e,_f_u_l_l _p_a_t_h.
+
+       If a filename is provided, it will try to resolve it in the following order:
+
+              • $${{XXDDGG__CCOONNFFIIGG__HHOOMMEE}}//rrooffii//tthheemmeess//
+
+              • $${{XXDDGG__CCOONNFFIIGG__HHOOMMEE}}//rrooffii//
+
+              • $${{XXDDGG__DDAATTAA__HHOOMMEE}}//rrooffii//tthheemmeess//
+
+              • $${{IINNSSTTAALLLL PPRREEFFIIXX}}//sshhaarree//rrooffii//tthheemmeess//
+
+       A name is resolved as a filename by appending the ..rraassii extension.
+
+EEXXAAMMPPLLEESS
+       Several examples are installed together with rrooffii. These can be found in {{ddaattaaddiirr}}//rrooffii//tthheemmeess//, where {{ddaattaaddiirr}} is the install path of rrooffii
+       data. When installed using a package manager, this is usually: //uussrr//sshhaarree//.
+
+SSEEEE AALLSSOO
+       rofi(1), rofi-script(5), rofi-theme-selector(1)
+
+                                                                     rofi-theme                                                       ROFI-THEME(5)
