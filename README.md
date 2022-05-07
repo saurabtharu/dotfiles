@@ -2,7 +2,7 @@
 * binwalk       for reverse engineering
 * insomnia      for doing GET and POST request
 * sxhkd
-*  librewolf
+* librewolf
 * bspwm
 * kdeconnect
 * thunar
@@ -21,27 +21,27 @@
 
 # POLYBAR
 
-jgmenu
-pulseaudio-control
-pavucontrol
-rofi
-dmenu 
-nmcli
-xprop
-xrandr
-wmctrl
-epiphany
-librewolf
-ranger
-vimtex
-virt-manager
-vlc
-vmware
-yay
-yt-dlp
-zsh
-fish
-rofi-emoji
+* jgmenu
+* pulseaudio-control
+* pavucontrol
+* rofi
+* dmenu 
+* nmcli
+* xprop
+* xrandr
+* wmctrl
+* epiphany
+* librewolf
+* ranger
+* vimtex
+* virt-manager
+* vlc
+* vmware
+* yay
+* yt-dlp
+* zsh
+* fish
+* rofi-emoji
 
 
 
@@ -50,16 +50,17 @@ rofi-emoji
 
 CODE extension
 ---------------
-intellicode
-jinjaa2 snippet kit
-jupyter
-jupyter keymap
-jupyter notebook renders
-live  server
-live share
-monokai dark vibrant by larscom
-monokai light by mhmk
-pylance
-python
-vscode great icons
+
+* intellicode
+* jinjaa2 snippet kit
+* jupyter
+* jupyter keymap
+* jupyter notebook renders
+* live  server
+* live share
+* monokai dark vibrant by larscom
+* monokai light by mhmk
+* pylance
+* python
+* vscode great icons
  
