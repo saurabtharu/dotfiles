@@ -41,6 +41,7 @@ yay
 yt-dlp
 zsh
 fish
+rofi-emoji
 
 
 
