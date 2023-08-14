@@ -1,6 +1,6 @@
 * Atom
 * binwalk       for reverse engineering
-* insomnia      for doing GET and POST request
+* insomnia      for API testing
 * sxhkd
 * librewolf
 * bspwm
@@ -64,3 +64,11 @@ CODE extension
 * python
 * vscode great icons
  
+
+
+
+
+XResources
+------------
+
+`ln -s dracula/xresources/Xresources .Xresources`
