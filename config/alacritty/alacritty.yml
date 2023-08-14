@@ -1,0 +1,8 @@
+import:
+  - dracula.yml
+
+
+font:
+    # Point size
+     family: JetBrains Mono
+     size: 9.0

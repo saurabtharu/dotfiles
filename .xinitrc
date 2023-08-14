@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
@@ -8,15 +8,7 @@ sysmodmap=/etc/X11/xinit/.Xmodmap
 # merge in defaults and keymaps
 
 if [ -f $sysresources ]; then
-
-
-
-
-
-
-
     xrdb -merge $sysresources
-
 fi
 
 if [ -f $sysmodmap ]; then
@@ -24,15 +16,7 @@ if [ -f $sysmodmap ]; then
 fi
 
 if [ -f "$userresources" ]; then
-
-
-
-
-
-
-
     xrdb -merge "$userresources"
-
 fi
 
 if [ -f "$usermodmap" ]; then
@@ -48,10 +32,23 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
+## polkit deamon
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 
-exec bspwm
-# twm &
-# xclock -geometry 50x50-1+1 &
-# xterm -geometry 80x50+494+51 &
-#  xterm -geometry 80x20+494-0 &
-# exec xterm -geometry 80x66+0+0 -name login
+/usr/bin/pipewire &
+/usr/bin/pipewire-pulse &
+/usr/bin/pipewire-media-session &
+# lock the computer if it is inactive for 4 minutes
+xautolock -time 10 -locker slock&
+export _JAVA_AWT_WM_NONREPARENTING=1
+# export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"               # for running valgrind 
+export PATH="$PATH:/home/saurab/.cargo/bin"
+export PATH="$PATH:/home/saurab/.dotnet/tools"
+export OPENAI_API_KEY=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
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+exec bspwm 
+
+
+
+
+# exec mwm

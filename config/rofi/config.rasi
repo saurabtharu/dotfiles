@@ -1,0 +1,35 @@
+/** Basic config file **/
+
+
+
+configuration {
+
+	font: "Fira Code Bold 10";
+	width: 30;
+	line-margin: 10;
+	lines: 4;
+	columns: 2;
+    
+    drun-display-format: "{icon} {name}";
+    display-ssh:    " ";
+    display-run:    " ";
+    display-drun:   " ";
+    display-window: " ";
+    display-combi:  " ";
+    display-emoji: "emoji ";
+    terminal: "alacritty ";
+    show-icons:     true;
+    modi: "drun,run,window,emoji,calc";
+    sidebar-mode: false;
+    bw: 0;
+    location: 0;
+    fake-transparency: false;
+    hide-scrollbar: true;
+    icon-theme: "Papirus";
+}
+
+
+@theme "/home/saurab/.config/rofi/themes/nord.rasi"
+/*@theme "/home/saurab/.config/rofi/themes/old config.rasi"*/
+/* @theme "/home/saurab/.config/rofi/themes/Pop-Dark.rasi" */
+

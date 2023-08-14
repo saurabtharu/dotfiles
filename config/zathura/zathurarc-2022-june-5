@@ -1,0 +1,59 @@
+#  _______         __   __                     
+# |__     |.---.-.|  |_|  |--.--.--.----.---.-.
+# |     __||  _  ||   _|     |  |  |   _|  _  |
+# |_______||___._||____|__|__|_____|__| |___._|
+
+
+# colors
+set default-bg "#282A36"
+set default-fg "#F8F8F2"
+
+set completion-bg "#282A36"
+set completion-fg "#F8F8F2"
+
+set statusbar-bg "#BD93F9"
+set statusbar-fg "#2E3440"
+
+set inputbar-fg "#BD93F9"
+set inputbar-bg "#2E3440"
+
+set highlight-color "#5F6773"
+set highlight-active-color "#282A36"
+
+set completion-highlight-fg "#2E3440"
+set completion-highlight-bg "#BD93F9"
+
+set notification-bg "#FF79C6"
+set notification-fg "#ffffff"
+
+set notification-warning-bg "#F1FA8C"
+set notification-warning-fg "#282A36"
+
+set notification-error-bg "#FF5555"
+set notification-error-fg "#F8F8F2"
+
+set recolor-darkcolor "#FF79C6"
+set recolor-lightcolor "#282A36"
+
+set index-bg "#282A36"
+set index-fg "#F8F8F2"
+set index-active-fg "#2E3440"
+set index-active-bg "#FFFFFF"
+
+# font
+set font "SauceCodePro Nerd Font 9"
+
+# settings
+set window-height 720
+set window-width 1255
+set adjust-open width
+set page-padding 8
+set show-hidden true
+set statusbar-basename true
+set statusbar-home-tilde true
+set page-right-to-left true
+set recolor true
+set recolor-reverse-video true
+set selection-clipboard clipboard
+
+
