@@ -44,7 +44,6 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 # export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"               # for running valgrind 
 export PATH="$PATH:/home/saurab/.cargo/bin"
 export PATH="$PATH:/home/saurab/.dotnet/tools"
-export OPENAI_API_KEY=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
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 exec bspwm 
 

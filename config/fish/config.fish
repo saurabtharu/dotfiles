@@ -25,7 +25,5 @@ alias n2t="zathura ~/Downloads/nand2tetris/nand2tetris\ -\ Noam\ Nisan,\ Shimon\
 
 alias fuck="killall"
 
-set -g -x  OPENAI_API_KEY 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
-
 set -x PATH /home/saurab/.cargo/bin $PATH
 starship init fish | source
